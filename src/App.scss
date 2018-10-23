@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css?family=Sarala');
+$white: #FFF;
+$black: #000;
+$font: 'Sarala', sans-serif;
+$heading-color: #004062;
+
+body {
+  background-color: $white;
+  font-family: $font !important;
+  .App {
+    header {
+      position: relative;
+      width: 100%;
+      display: block;
+      img {
+        padding-top: 0;
+        padding-left: 37px;
+        height: 150px;
+        width: 150px;
+        margin-top: -34px;
+        margin-left: -20px;
+      }
+      h1 {
+        color: $heading-color;
+        display: inline-block;
+        text-align: center;
+        margin-top: -50px;
+      }
+    }
+    p {
+      font-style: normal;
+      font-weight: 200;
+      color: $black;
+    }
+  }
+}
