@@ -83,4 +83,20 @@ body {
       }
     }
   }
+
+  .App.loading {
+    position: absolute;
+    top: 215px;
+    right: 36%;
+    p {
+      margin-left: 55px;
+    }
+    .gif-container {
+      img {
+        width: 200px;
+        height: 200px;
+      }
+    }
+  }
+
 }

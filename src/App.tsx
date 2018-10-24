@@ -1,15 +1,17 @@
- import * as moment from 'moment';
+import * as moment from 'moment';
 // import * as momenttz from 'moment-timezone';
 import * as React from 'react';
 import AnalogClock, {Themes} from 'react-analog-clock';
 import './App.scss';
 import './Responsive.scss';
 
+import done from "./done.gif";
+import loading from './loading.svg';
 import logo from './logo.png';
 
 
 class App extends React.Component<{},
-{business: {}, loaded:boolean, system: {is_online: boolean, signups_allowed: boolean, system_time: null}}> {
+{business: {}, loaded:boolean, gifdone:boolean, system: {is_online: boolean, signups_allowed: boolean, system_time: null}}> {
   constructor(props: {}) {
     super(props);
     this.state = {
@@ -19,6 +21,7 @@ class App extends React.Component<{},
         is_open_24h_today: false,
         opens: null
       }, // variables used to display
+      gifdone: false,
       loaded: false,
       system: {
         is_online: false,
@@ -56,12 +59,6 @@ class App extends React.Component<{},
           }
         })
 
-
-        /*
-        this.setState({
-          loaded: false
-        })
-        */
 
       })
     })
@@ -112,7 +109,7 @@ class App extends React.Component<{},
     console.log(strOffSet)
     console.log(this.state.business)
 
-    if(this.state.loaded){
+    if(this.state.loaded && this.state.gifdone){
       return (
         <div className="App">
           <header className="App-header">
@@ -145,7 +142,29 @@ class App extends React.Component<{},
         </div>
       );
     } else {
-      return (<p>Please wait</p>)
+
+      if(this.state.loaded && !this.state.gifdone){
+        setTimeout(() => this.setState({gifdone: true}), 1100);
+      }
+
+      return (
+        <div className="App loading">
+          {!this.state.loaded && 
+            <div className="loading-container">
+              <img src={loading} className="loading" alt="loading" />
+              <p>Loading...</p>
+            </div>
+          }
+
+          {!this.state.gifdone && this.state.loaded &&
+            <div className="gif-container">
+              <img src={done} className="done" alt="Done!" />
+              <p>Loaded!</p>
+            </div>
+          }
+
+        </div>
+      )
     }
   }
 }
