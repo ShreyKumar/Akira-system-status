@@ -34,5 +34,22 @@ body {
       font-weight: 200;
       color: $black;
     }
+    .Main-card {
+      font-style: normal;
+      font-weight: 200;
+      color: #000;
+      font-size: 17px;
+      text-align: center;
+      position: relative;
+      width: 276px;
+      margin-right: auto;
+      margin-left: auto;
+      .server-label {
+        position: absolute;
+        color: $white;
+        top: 215px;
+        right: 33%;
+      }
+    }
   }
 }
