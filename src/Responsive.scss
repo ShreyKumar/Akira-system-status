@@ -1,0 +1,23 @@
+// Iphone X
+@media only screen and (max-width: 414px) {
+  .App-header {
+    h1 {
+      display: none !important;
+    }
+    .App-logo {
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+      padding-left: 0;
+    }
+  }
+}
+// Iphone 5
+@media only screen and (max-width: 320px) {
+  .App{
+    .Main-card {
+      border: none !important;
+      margin-top: 15px !important;
+    }
+  }
+}

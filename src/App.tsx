@@ -1,7 +1,9 @@
-import * as moment from 'moment';
+ import * as moment from 'moment';
+// import * as momenttz from 'moment-timezone';
 import * as React from 'react';
 import AnalogClock, {Themes} from 'react-analog-clock';
 import './App.scss';
+import './Responsive.scss';
 
 import logo from './logo.png';
 
@@ -25,38 +27,6 @@ class App extends React.Component<{},
       } // variables used to display
     };
 
-  }
-
-
-  /*
-    Calculates Offset between current time and system time
-  */
-  public calculateOffSet(currentTime:number) {
-    const now = moment()
-    console.log(now)
-    return now
-  }
-
-  public systemStatus(onlineStatus:boolean, signupsAllowed:boolean) {
-    // const onlineStatus = this.state.system.is_online
-    // const signupsAllowed = this.state.business.signups_allowed
-
-    let msg = "Our servers are "
-
-    if(onlineStatus){
-      msg += "Up!"
-
-      if(signupsAllowed){
-        msg += " Sign up today!"
-      }
-    } else {
-      msg += "Down!"
-    }
-
-    return msg
-  }
-
-  public componentWillMount(){
     fetch("https://app.akira.md/api/system_status").then(response => {
       if(!response.ok){
         throw new Error(response.statusText)
@@ -87,27 +57,96 @@ class App extends React.Component<{},
         })
 
 
+        /*
+        this.setState({
+          loaded: false
+        })
+        */
+
       })
     })
+
+
+  }
+
+
+  public systemStatus(onlineStatus:boolean, signupsAllowed:boolean) {
+    // const onlineStatus = this.state.system.is_online
+    // const signupsAllowed = this.state.business.signups_allowed
+
+    let msg = ""
+
+    if(onlineStatus){
+      msg += " Up!"
+
+      if(signupsAllowed){
+        msg += " Sign up today!"
+      }
+    } else {
+      msg += " Down! Thank you for your patience."
+    }
+
+    return msg
+  }
+
+  public showOpeningHours(){
+    alert("opening hours")
   }
 
   public render() {
-    this.calculateOffSet(this.state.system.system_time)
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1>System Status & Opening hours</h1>
-        </header>
-        <div className="Main-card">
-          <p className="sys-status">
-            {this.systemStatus(this.state.system.is_online, this.state.system.signups_allowed)}
-          </p>
-          <AnalogClock theme={Themes.dark} width={250} />
-          <p className="server-label">Server time</p>
+    /*
+    if(this.state.system.system_time != null){
+      this.calculateOffSet(this.state.system.system_time)
+    }
+    */
+    // get offset and display that
+    const secOffSet = moment.parseZone().utcOffset();
+    const hqsecOffSet = moment.parseZone().utcOffset();
+
+    let strOffSet = String(secOffSet/60);
+
+    if(!strOffSet.includes(".")){
+      strOffSet += ".0"
+    }
+
+    console.log(strOffSet)
+    console.log(this.state.business)
+
+    if(this.state.loaded){
+      return (
+        <div className="App">
+          <header className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+            <h1>System Machine</h1>
+          </header>
+          <div className="Main-card">
+            <p className="sys-status">
+              Our Servers are
+              <b className={"sys-status-" + this.state.system.is_online}>
+                {this.systemStatus(this.state.system.is_online, this.state.system.signups_allowed)}
+              </b>
+            </p>
+            <AnalogClock theme={Themes.dark} width={250} gmtOffset={strOffSet} />
+            <p className="server-label">Server time</p>
+            {secOffSet !== hqsecOffSet &&
+              <p className="change-timezone">
+                <a href="#">Change to Toronto's timezone</a>
+              </p>
+            }
+            <p className="opening-hours">
+              {this.state.business &&
+                <a href="#" onClick={this.showOpeningHours}>Show opening hours</a>
+              }
+              {!this.state.business &&
+                <span>Sorry we are closed!</span>
+              }
+            </p>
+          </div>
         </div>
-      </div>
-    );
+      );
+    } else {
+      return (<p>Please wait</p>)
+    }
   }
 }
 
