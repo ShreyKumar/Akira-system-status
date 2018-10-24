@@ -130,14 +130,17 @@ class App extends React.Component<{},
                 <a href="#">Change to Toronto's timezone</a>
               </p>
             }
-            <p className="opening-hours">
+            <div className="opening-hours">
               {this.state.business &&
-                <a href="#" onClick={this.showOpeningHours}>Show opening hours</a>
+                <div className="open-container">
+                  <span>We are open!</span><br/>
+                  <a href="#" onClick={this.showOpeningHours}>Show opening hours</a>
+                </div>
               }
               {!this.state.business &&
                 <span>Sorry we are closed!</span>
               }
-            </p>
+            </div>
           </div>
         </div>
       );
@@ -149,7 +152,7 @@ class App extends React.Component<{},
 
       return (
         <div className="App loading">
-          {!this.state.loaded && 
+          {!this.state.loaded &&
             <div className="loading-container">
               <img src={loading} className="loading" alt="loading" />
               <p>Loading...</p>
