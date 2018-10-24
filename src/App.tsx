@@ -134,12 +134,13 @@ class App extends React.Component<{},
               {this.state.business &&
                 <div className="open-container">
                   <span>We are open!</span><br/>
-                  <a href="#" onClick={this.showOpeningHours}>Show opening hours</a>
                 </div>
               }
               {!this.state.business &&
                 <span>Sorry we are closed!</span>
               }
+
+              <a href="#" onClick={this.showOpeningHours}>See opening hours</a>
             </div>
           </div>
         </div>
