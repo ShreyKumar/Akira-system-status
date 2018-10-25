@@ -11,24 +11,50 @@ import logo from './logo.png';
 
 
 class App extends React.Component<{},
-{business: {}, loaded:boolean, gifdone:boolean, system: {is_online: boolean, signups_allowed: boolean, system_time: null}}> {
+  {
+    business: {
+      closes:string,
+      is_open:boolean,
+      is_open_24h_today:boolean,
+      opens:string
+    },
+    circleclass:string,
+    circlelabel:string,
+    loaded:boolean,
+    gifdone:boolean,
+    showopenhours:boolean,
+    system: {
+      is_online: boolean,
+      signups_allowed: boolean,
+      system_time: string
+    }}>
+    {
+
   constructor(props: {}) {
     super(props);
     this.state = {
       business: {
-        closes: null,
+        closes: "",
         is_open: false,
         is_open_24h_today: false,
-        opens: null
+        opens: ""
       }, // variables used to display
+      circleclass: "",
+      circlelabel: "",
       gifdone: false,
       loaded: false,
+      showopenhours:false,
       system: {
         is_online: false,
         signups_allowed: false,
-        system_time: null
+        system_time: ""
       } // variables used to display
     };
+
+    this.systemStatus = this.systemStatus.bind(this)
+    this.showOpeningHours = this.showOpeningHours.bind(this)
+    this.changeTimeZone = this.changeTimeZone.bind(this)
+    this.hideOpeningHours = this.hideOpeningHours.bind(this)
 
     fetch("https://app.akira.md/api/system_status").then(response => {
       if(!response.ok){
@@ -67,9 +93,9 @@ class App extends React.Component<{},
   }
 
 
-  public systemStatus(onlineStatus:boolean, signupsAllowed:boolean) {
-    // const onlineStatus = this.state.system.is_online
-    // const signupsAllowed = this.state.business.signups_allowed
+  public systemStatus() {
+    const onlineStatus = this.state.system.is_online
+    const signupsAllowed = this.state.system.signups_allowed
 
     let msg = ""
 
@@ -87,7 +113,37 @@ class App extends React.Component<{},
   }
 
   public showOpeningHours(){
-    alert("opening hours")
+    // const circumference = 141;
+    this.setState({
+      showopenhours: true
+    })
+
+    if(this.state.business.is_open_24h_today){
+      console.log("open")
+
+      // wait .1s
+      setTimeout(() => this.setState({circleclass: "percent-100"}), 100);
+
+      // wait 1.5s for animation to complete
+      setTimeout(() => this.setState({circlelabel: "24 hours"}), 1500);
+
+    } else {
+      // use moment to parse start and end time
+
+      console.log("not open")
+    }
+
+  }
+  public hideOpeningHours(){
+    this.setState({
+      circleclass: "",
+      circlelabel: "",
+      showopenhours: false
+    })
+  }
+
+  public changeTimeZone(){
+    alert("change timezone")
   }
 
   public render() {
@@ -120,28 +176,44 @@ class App extends React.Component<{},
             <p className="sys-status">
               Our Servers are
               <b className={"sys-status-" + this.state.system.is_online}>
-                {this.systemStatus(this.state.system.is_online, this.state.system.signups_allowed)}
+                {this.systemStatus()}
               </b>
             </p>
             <AnalogClock theme={Themes.dark} width={250} gmtOffset={strOffSet} />
             <p className="server-label">Server time</p>
             {secOffSet !== hqsecOffSet &&
               <p className="change-timezone">
-                <a href="#">Change to Toronto's timezone</a>
+                <a href="#" onClick={this.changeTimeZone}>Change to Toronto's timezone</a>
               </p>
             }
             <div className="opening-hours">
-              {this.state.business &&
+              {this.state.business && this.state.business.is_open &&
                 <div className="open-container">
                   <span>We are open!</span><br/>
                 </div>
               }
-              {!this.state.business &&
+              {(!this.state.business || !this.state.business.is_open) &&
                 <span>Sorry we are closed!</span>
               }
 
-              <a href="#" onClick={this.showOpeningHours}>See opening hours</a>
+              {!this.state.showopenhours &&
+                <a href="#" onClick={this.showOpeningHours}>See opening hours</a>
+              }
+              {this.state.showopenhours &&
+                <a href="#" onClick={this.hideOpeningHours}>Hide opening hours</a>
+              }
             </div>
+
+            {this.state.showopenhours &&
+              <div>
+                <svg width="100" height="100" className="opening-hours-circle 24h-true">
+                    <circle r="50" cx="50" cy="50" className="circle"/>
+                    <circle id="pie" r="22.5" cx="50" cy="50" className={"circle " + this.state.circleclass}/>
+                </svg>
+                <p className="opening-hours-label">{this.state.circlelabel}</p>
+              </div>
+            }
+
           </div>
         </div>
       );
