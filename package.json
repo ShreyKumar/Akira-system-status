@@ -2,6 +2,9 @@
   "name": "akira-system-status",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "9.10.0"
+  },
   "dependencies": {
     "@types/moment-timezone": "^0.5.9",
     "autoprefixer": "7.1.6",
