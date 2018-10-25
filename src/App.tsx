@@ -111,7 +111,7 @@ class App extends React.Component<{},
 
     if(this.state.loaded && this.state.gifdone){
       return (
-        <div className="App">
+        <div className="App not-loaded">
           <header className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
             <h1>System Machine</h1>
@@ -146,24 +146,25 @@ class App extends React.Component<{},
         </div>
       );
     } else {
-
       if(this.state.loaded && !this.state.gifdone){
-        setTimeout(() => this.setState({gifdone: true}), 1100);
+        setTimeout(() => this.setState({gifdone: true}), 2500);
       }
 
       return (
         <div className="App loading">
           {!this.state.loaded &&
             <div className="loading-container">
+              <img src={logo} className="loading-logo" alt="Akira MD" />
               <img src={loading} className="loading" alt="loading" />
-              <p>Loading...</p>
+              <span>Loading...</span>
             </div>
           }
 
           {!this.state.gifdone && this.state.loaded &&
             <div className="gif-container">
+              <img src={logo} className="loading-logo loaded" alt="Akira MD" />
               <img src={done} className="done" alt="Done!" />
-              <p>Loaded!</p>
+              <span>Loaded!</span>
             </div>
           }
 

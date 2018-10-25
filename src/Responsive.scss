@@ -11,13 +11,96 @@
       padding-left: 0;
     }
   }
+  .App.loading {
+    .gif-container,
+    .loading-container {
+      width: 100% !important;
+      .done,
+      .loading {
+        left: 130px !important;
+      }
+      span {
+        left: 180px !important;
+      }
+      .loading-logo {
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+        padding-left: 0;
+        position: relative;
+        top: 0;
+        left: 0;
+        margin-top: 45vh;
+      }
+      .loading-logo.loaded {
+        -webkit-animation-name: loadedresp !important;
+        -moz-animation-name: loadedresp !important;
+        -o-animation-name: loadedresp !important;
+        animation-name: loadedresp !important;
+      }
+
+      @-webkit-keyframes loadedresp {
+        0% {
+          position:absolute;
+          top: 44vh;
+        }
+        50% {
+          position:absolute;
+          top: 4vh;
+        }
+        100% {
+          position:absolute;
+          top: 44vh;
+        }
+      }
+      @-moz-keyframes loadedresp {
+        0% {
+          position:absolute;
+          top: 44vh;
+        }
+        50% {
+          position:absolute;
+          top: 4vh;
+        }
+        100% {
+          position:absolute;
+          top: 44vh;
+        }
+      }
+      @-o-keyframes loadedresp {
+        0% {
+          position:absolute;
+          top: 44vh;
+        }
+        50% {
+          position:absolute;
+          top: 4vh;
+        }
+        100% {
+          position:absolute;
+          top: 44vh;
+        }
+      }
+      @keyframes loadedresp {
+        0% {
+          margin-top: 45vh;
+        }
+        50% {
+          margin-top: 4vh;
+        }
+        100% {
+          margin-top: 45vh;
+        }
+      }
+    }
+  }
 }
 // Iphone 5
 @media only screen and (max-width: 320px) {
   .App{
     .Main-card {
       border: none !important;
-      margin-top: 15px !important;
+      margin-top: 4vh !important;
     }
   }
 }
