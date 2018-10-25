@@ -18,8 +18,9 @@ class App extends React.Component<{},
       is_open_24h_today:boolean,
       opens:string
     },
-    circleclass:string,
     circlelabel:string,
+    circlerotation:number,
+    circlewidth:number,
     loaded:boolean,
     gifdone:boolean,
     showopenhours:boolean,
@@ -39,8 +40,9 @@ class App extends React.Component<{},
         is_open_24h_today: false,
         opens: ""
       }, // variables used to display
-      circleclass: "",
       circlelabel: "",
+      circlerotation: 0,
+      circlewidth: 0,
       gifdone: false,
       loaded: false,
       showopenhours:false,
@@ -62,7 +64,6 @@ class App extends React.Component<{},
       }
 
       response.json().then((data) => {
-        console.log(data)
         /*
         const business:Business = new Business(data.is_open_for_business,
           data.is_open_24h_today, data.open_hours_today.open_at,
@@ -112,32 +113,127 @@ class App extends React.Component<{},
     return msg
   }
 
-  public showOpeningHours(){
-    // const circumference = 141;
+  public showOpeningHours(e: any){
+    e.preventDefault()
     this.setState({
       showopenhours: true
     })
 
-    if(this.state.business.is_open_24h_today){
-      console.log("open")
+    const open24hours = this.state.business.is_open_24h_today
+
+    if(open24hours){
 
       // wait .1s
-      setTimeout(() => this.setState({circleclass: "percent-100"}), 100);
+      setTimeout(() => this.setState({circlewidth: 1}), 100);
 
-      // wait 1.5s for animation to complete
-      setTimeout(() => this.setState({circlelabel: "24 hours"}), 1500);
+      this.setState({circlelabel: "24 hours", circlerotation: -90})
 
     } else {
       // use moment to parse start and end time
 
-      console.log("not open")
+      const openingtime = this.state.business.opens
+      const closingtime = this.state.business.closes
+
+      const parseOpeningtime = moment(openingtime)
+      const startHour = Number(parseOpeningtime.format("H"))
+      const startMinute = Number(parseOpeningtime.format("m"))
+
+      let circlelabel = String("")
+      if(startHour < 12){
+        circlelabel += String(startHour)
+
+        if(startMinute !== 0){
+          circlelabel += ":" + startMinute
+        }
+        circlelabel += "am - "
+
+      } else if(startHour === 12){
+        circlelabel += String(startHour)
+
+        if(startMinute !== 0){
+          circlelabel += ":" + startMinute
+        }
+        circlelabel += "pm - "
+      } else {
+
+        circlelabel += String(startHour - 12)
+
+        if(startMinute !== 0){
+          circlelabel += ":" + startMinute
+        }
+
+        circlelabel += "pm - "
+      }
+
+      const parseClosingtime = moment(closingtime)
+      const endHour = Number(parseClosingtime.format("H"))
+      const endMinute = Number(parseClosingtime.format("m"))
+
+      if(endHour < 12){
+        circlelabel += String(endHour)
+
+        if(endMinute !== 0){
+          circlelabel += ":" + endMinute
+        }
+
+        circlelabel += "am"
+      } else if(endHour === 12){
+        circlelabel += String(endHour)
+
+        if(endMinute !== 0){
+          circlelabel += ":" + endMinute
+        }
+
+        circlelabel += "pm"
+      } else {
+        circlelabel += String(endHour - 12)
+
+        if(endMinute !== 0){
+          circlelabel += ":" + endMinute
+        }
+
+        circlelabel += "pm"
+      }
+
+      this.setState({
+        "circlelabel": circlelabel
+      })
+
+      // calculate difference to find circle width
+      const startMinuteFactor = startMinute/60
+      const endMinuteFactor = endMinute/60
+
+      const startTimeFactor = startHour + startMinuteFactor
+      const endTimeFactor = endHour + endMinuteFactor
+
+      const totaltime = Number((endTimeFactor - startTimeFactor).toFixed(2))
+      const finalWidth = (totaltime * 0.1) - 0.1
+
+
+      // get rotation angle
+      let startAngle = -90
+
+      if(startHour < 12){
+        startAngle += 30 * startTimeFactor
+      } else {
+        startAngle += 30 * (startTimeFactor - 12)
+      }
+
+
+
+      this.setState({
+        circlerotation: startAngle,
+        circlewidth: finalWidth
+      })
+
     }
 
   }
-  public hideOpeningHours(){
+  public hideOpeningHours(e:any){
+    e.preventDefault()
     this.setState({
-      circleclass: "",
       circlelabel: "",
+      circlewidth: 0,
       showopenhours: false
     })
   }
@@ -162,10 +258,22 @@ class App extends React.Component<{},
       strOffSet += ".0"
     }
 
-    console.log(strOffSet)
-    console.log(this.state.business)
-
     if(this.state.loaded && this.state.gifdone){
+
+      const myprop = {
+        "strokeDasharray": String(141 * this.state.circlewidth) + " " + String(141),
+        "transition": "stroke-dasharray 1s linear"
+      } as React.CSSProperties
+
+      let transformOutput = ""
+      if(this.state.circlerotation !== 0){
+        transformOutput = "rotate(" + String(this.state.circlerotation) + "deg" + ")"
+      }
+
+      const parentprop = {
+        "transform": transformOutput
+      } as React.CSSProperties
+
       return (
         <div className="App not-loaded">
           <header className="App-header">
@@ -206,9 +314,9 @@ class App extends React.Component<{},
 
             {this.state.showopenhours &&
               <div>
-                <svg width="100" height="100" className="opening-hours-circle 24h-true">
+                <svg style={parentprop} width="100" height="100" className="opening-hours-circle">
                     <circle r="50" cx="50" cy="50" className="circle"/>
-                    <circle id="pie" r="22.5" cx="50" cy="50" className={"circle " + this.state.circleclass}/>
+                    <circle id="pie" r="22.5" cx="50" cy="50" style={myprop} />
                 </svg>
                 <p className="opening-hours-label">{this.state.circlelabel}</p>
               </div>

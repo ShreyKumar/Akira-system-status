@@ -17,6 +17,10 @@ body {
   a:hover {
     text-decoration: underline;
   }
+  a,
+  a:visited {
+    color: blue
+  }
 
   .App.not-loaded .App-header h1,
   .App.not-loaded .Main-card {
@@ -119,24 +123,15 @@ body {
       padding: 20px;
       border: 2px solid $black;
       border-radius: 20px;
+      min-height: 571px;
       .opening-hours {
         margin-top: 30px;
-      }
-      .opening-hours-label {
-        position: absolute;
-        top: 276px;
-        font-size: 14px;
-        left: 128px;
-        z-index: 1;
-        font-weight: bold;
-        color: white;
       }
       svg.opening-hours-circle {
         position: absolute;
         top: 232px;
         right: 109px;
         opacity: 0.5;
-        transform: rotate(-90deg);
         circle {
           fill: transparent;
         }
@@ -146,41 +141,7 @@ body {
           stroke-dasharray: 0 $circle-circumference;
           stroke-width: 45;
           transition: stroke-dasharray 1s linear;
-
-          &.percent-10 {
-            stroke-dasharray: ($circle-circumference * 0.1) $circle-circumference;
-          }
-          &.percent-20 {
-            stroke-dasharray: ($circle-circumference * 0.2) $circle-circumference;
-          }
-          &.percent-30 {
-            stroke-dasharray: ($circle-circumference * 0.3) $circle-circumference;
-          }
-          &.percent-40 {
-            stroke-dasharray: ($circle-circumference * 0.4) $circle-circumference;
-          }
-          &.percent-50 {
-            stroke-dasharray: ($circle-circumference * 0.5) $circle-circumference;
-          }
-          &.percent-60 {
-            stroke-dasharray: ($circle-circumference * 0.6) $circle-circumference;
-          }
-          &.percent-70 {
-            stroke-dasharray: ($circle-circumference * 0.7) $circle-circumference;
-          }
-          &.percent-80 {
-            stroke-dasharray: ($circle-circumference * 0.8) $circle-circumference;
-          }
-          &.percent-90 {
-            stroke-dasharray: ($circle-circumference * 0.9) $circle-circumference;
-          }
-          &.percent-100 {
-            stroke-dasharray: ($circle-circumference * 1) $circle-circumference;
-          }
         }
-      }
-      svg.opening-hours-circle.24h-true {
-        transform: rotate(-90deg);
       }
       .change-timezone {
         margin-top: 40px;
